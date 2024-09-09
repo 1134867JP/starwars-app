@@ -1,49 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-import axios from "axios";
+import React from "react";
+import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import I18n from "./translations"; // Importe o arquivo de traduções
 
 export default function DetalhesPersonagemScreen({ route, navigation }) {
   const { personagem } = route.params;
-  const [homeworldName, setHomeworldName] = useState("");
-  const [speciesNames, setSpeciesNames] = useState([]);
-
-  useEffect(() => {
-    async function fetchHomeworld() {
-      try {
-        const response = await axios.get(personagem.homeworld);
-        setHomeworldName(response.data.name); // Supondo que o nome do planeta está na propriedade 'name'
-      } catch (error) {
-        console.error("Erro ao buscar planeta:", error);
-        setHomeworldName("Desconhecido"); // Valor padrão em caso de erro
-      }
-    }
-
-    if (personagem.homeworld) {
-      fetchHomeworld();
-    }
-  }, [personagem.homeworld]);
-
-  useEffect(() => {
-    async function fetchSpecies() {
-      try {
-        // Mapeia as URLs das espécies para uma lista de promessas
-        const responses = await Promise.all(
-          personagem.species.map((url) => axios.get(url))
-        );
-        // Extrai os nomes das espécies das respostas
-        const names = responses.map((response) => response.data.name);
-        setSpeciesNames(names); // Atualiza o estado com os nomes das espécies
-      } catch (error) {
-        console.error("Erro ao buscar espécies:", error);
-        setSpeciesNames(["Desconhecido"]); // Valor padrão em caso de erro
-      }
-    }
-
-    if (personagem.species && personagem.species.length > 0) {
-      fetchSpecies();
-    }
-  }, [personagem.species]);
 
   return (
     <View style={styles.container}>
@@ -60,43 +20,44 @@ export default function DetalhesPersonagemScreen({ route, navigation }) {
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Cor do cabelo:</Text>
-        <Text style={styles.label}>{I18n.t("details.hair_color")[personagem.hair_color]}</Text>
+        <Text style={styles.value}>
+          {I18n.t("details.hair_color")[personagem.hair_color] ||
+            personagem.hair_color}
+        </Text>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Cor da pele:</Text>
-        <Text style={styles.label}>{I18n.t("details.skin_color")[personagem.skin_color]}</Text>
+        <Text style={styles.value}>
+          {I18n.t("details.skin_color")[personagem.skin_color] ||
+            personagem.skin_color}
+        </Text>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Cor dos olhos:</Text>
-        <Text style={styles.label}>{I18n.t("details.eye_color")[personagem.eye_color]}</Text>
+        <Text style={styles.value}>
+          {I18n.t("details.eye_color")[personagem.eye_color] ||
+            personagem.eye_color}
+        </Text>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Gênero:</Text>
-        <Text style={styles.label}>{I18n.t("details.gender")[personagem.gender]}</Text>
+        <Text style={styles.value}>
+          {I18n.t("details.gender")[personagem.gender] || personagem.gender}
+        </Text>
       </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>{I18n.t("details.birth_year")}:</Text>
-        <Text style={styles.value}>{personagem.birth_year}</Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>{I18n.t("details.homeworld")}:</Text>
-        <Text style={styles.value}>{homeworldName || "Desconhecido"}</Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>{I18n.t("details.species")}:</Text>
-        <Text style={styles.value}>{speciesNames.length > 0 ? speciesNames.join(", ") : "Desconhecido"}</Text>
-    </View>
       <View style={styles.buttonContainer}>
-        <Button
-          title={I18n.t("details.starships")}
+        <TouchableOpacity
+          style={[styles.button, styles.starshipsButton]}
           onPress={() => navigation.navigate("Naves", { personagem })}
-          color="#007BFF"
-        />
-        <Button
-          title={I18n.t("details.films")}
+        >
+          <Text style={styles.buttonText}>{I18n.t("details.starships")}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.filmsButton]}
           onPress={() => navigation.navigate("Filmes", { personagem })}
-          color="#28a745"
-        />
+        >
+          <Text style={styles.buttonText}>{I18n.t("details.films")}</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -133,8 +94,25 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
-    flexDirection: "column",
+  },
+  button: {
+    width: "45%",
+    padding: 10,
+    borderRadius: 8,
     alignItems: "center",
+  },
+  starshipsButton: {
+    backgroundColor: "#007BFF",
+  },
+  filmsButton: {
+    backgroundColor: "#28a745",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

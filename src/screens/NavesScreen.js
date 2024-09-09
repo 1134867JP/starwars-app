@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import axios from "axios";
 
 export default function NavesScreen({ route }) {
   const { personagem } = route.params;
   const [naves, setNaves] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  // Mapeamento de naves para imagens (adicione mais conforme necessário)
   const navesImages = {
     "Millennium Falcon":
       "https://starwars-visualguide.com/assets/img/starships/10.jpg",
@@ -18,21 +26,47 @@ export default function NavesScreen({ route }) {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     async function fetchNaves() {
-      const responses = await Promise.all(
-        personagem.starships.map((url) => axios.get(url))
-      );
-      setNaves(responses.map((response) => response.data));
+      try {
+        const responses = await Promise.all(
+          personagem.starships.map((url) => axios.get(url, { signal }))
+        );
+        setNaves(responses.map((response) => response.data));
+      } catch (error) {
+        if (!axios.isCancel(error)) {
+          console.error("Erro ao buscar as naves:", error);
+          setError(true);
+        }
+      } finally {
+        setLoading(false);
+      }
     }
 
     if (personagem.starships.length > 0) {
       fetchNaves();
+    } else {
+      setLoading(false);
     }
+
+    return () => {
+      controller.abort(); // Cancela a solicitação se o componente for desmontado
+    };
   }, [personagem]);
 
   return (
     <View style={styles.container}>
-      {naves.length > 0 ? (
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : error || naves.length === 0 ? (
+        <Text style={styles.noNavesText}>
+          {error
+            ? "Erro ao carregar naves."
+            : "Este personagem não possui naves."}
+        </Text>
+      ) : (
         <FlatList
           data={naves}
           keyExtractor={(item) => item.name}
@@ -59,10 +93,6 @@ export default function NavesScreen({ route }) {
             </View>
           )}
         />
-      ) : (
-        <Text style={styles.noNavesText}>
-          Não há naves disponíveis para este personagem.
-        </Text>
       )}
     </View>
   );
@@ -77,11 +107,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    overflow: "hidden",
     marginBottom: 20,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
     elevation: 3,
   },
   image: {

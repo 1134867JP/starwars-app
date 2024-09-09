@@ -12,20 +12,19 @@ import {
 
 import axios from "axios";
 
-const personagensIds = ["1", "4", "14", "20", "13"]; // IDs dos personagens
+const personagensIds = ["1", "4", "14", "20", "13"];
 
-// URLs fictícias das imagens dos personagens
 const personagensImagens = {
-  1: "https://starwars-visualguide.com/assets/img/characters/1.jpg", // Luke Skywalker
-  4: "https://starwars-visualguide.com/assets/img/characters/4.jpg", // Darth Vader
-  14: "https://starwars-visualguide.com/assets/img/characters/14.jpg", // Han Solo
-  20: "https://starwars-visualguide.com/assets/img/characters/20.jpg", // Yoda
-  13: "https://starwars-visualguide.com/assets/img/characters/13.jpg", // Chewbacca
+  1: "https://starwars-visualguide.com/assets/img/characters/1.jpg",
+  4: "https://starwars-visualguide.com/assets/img/characters/4.jpg",
+  14: "https://starwars-visualguide.com/assets/img/characters/14.jpg",
+  20: "https://starwars-visualguide.com/assets/img/characters/20.jpg",
+  13: "https://starwars-visualguide.com/assets/img/characters/13.jpg",
 };
 
 export default function PersonagensScreen({ navigation }) {
   const [personagens, setPersonagens] = useState([]);
-  const [loading, setLoading] = useState(true); // Track the loading state
+  const [loading, setLoading] = useState(true);
 
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
@@ -39,10 +38,10 @@ export default function PersonagensScreen({ navigation }) {
           )
         );
         setPersonagens(responses.map((response) => response.data));
-        setLoading(false); // Set loading to false after data is fetched
+        setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar personagens:", error);
-        setLoading(false); // Set loading to false in case of error
+        setLoading(false);
       }
     }
     fetchPersonagens();
@@ -50,13 +49,13 @@ export default function PersonagensScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {loading ? ( // Render the loading indicator if loading is true
+      {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <FlatList
           data={personagens}
-          numColumns={1} // Um card por linha
-          keyExtractor={(item) => item.url} // Usar o URL como chave única
+          numColumns={1}
+          keyExtractor={(item) => item.url}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={[
@@ -98,8 +97,8 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     alignItems: "center",
-    elevation: 2, // Sombra para Android
-    shadowColor: "#000", // Sombra para iOS
+    elevation: 2,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 8,

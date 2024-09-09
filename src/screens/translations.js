@@ -1,7 +1,5 @@
-// translations.js
 import I18n from "i18n-js";
 
-// Defina as traduções
 I18n.translations = {
   en: {
     details: {
@@ -30,9 +28,6 @@ I18n.translations = {
       height: "Height",
       mass: "Mass",
       name: "Name",
-      birth_year: "Birth Year",
-      homeworld: "Homeworld",
-      species: "Species",
       starships: "Starships",
       vehicles: "Vehicles",
       films: "Films",
@@ -41,8 +36,10 @@ I18n.translations = {
   pt: {
     details: {
       hair_color: {
+        none: "Nenhum",
         blond: "Loiro",
         brown: "Castanho",
+        white: "Branco",
         black: "Preto",
         red: "Ruivo",
       },
@@ -50,7 +47,9 @@ I18n.translations = {
         fair: "Clara",
         gold: "Dourada",
         white: "Branca",
+        green: "Verde",
         blue: "Azul",
+        unknown: "Desconhecida",
       },
       eye_color: {
         blue: "Azul",
@@ -65,18 +64,14 @@ I18n.translations = {
       height: "Altura",
       mass: "Peso",
       name: "Nome",
-      birth_year: "Ano de Nascimento",
-      homeworld: "Planeta Natal",
-      species: "Espécies",
-      starships: "Naves Estelares",
+      starships: "Naves",
       vehicles: "Veículos",
       films: "Filmes",
     },
   },
 };
 
-// Defina o idioma padrão
-I18n.defaultLocale = "pt"; // Atualizado para defaultLocale
+I18n.defaultLocale = "pt";
 I18n.locale = "pt";
 
 export default I18n;

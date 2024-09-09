@@ -5,8 +5,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 export default function SobreScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}> Sobre o Desenvolvedor Projeto Acadêmico</Text>
-      <View style={styles.card}>
+      <Text style={styles.title}>Projeto Acadêmico</Text>
+      <Text style={styles.title2}>Sobre os Desenvolvedores:</Text>
+      <View style={[styles.card, { marginTop: 20 }]}>
         <View style={styles.infoContainer}>
           <MaterialIcons name="school" size={24} color="#6c757d" />
           <Text style={styles.label}>RA:</Text>
@@ -23,6 +24,40 @@ export default function SobreScreen() {
           <Text style={styles.value}>1134867@atitus.edu.com.br</Text>
         </View>
       </View>
+      <View style={[styles.card, { marginTop: 20 }]}>
+        <View style={styles.infoContainer}>
+          <MaterialIcons name="school" size={24} color="#6c757d" />
+          <Text style={styles.label}>RA:</Text>
+          <Text style={styles.value}>1134872</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <MaterialIcons name="person" size={24} color="#6c757d" />
+          <Text style={styles.label}>Nome Completo:</Text>
+          <Text style={styles.value}>Ricardo Groth da Silva</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <MaterialIcons name="email" size={24} color="#6c757d" />
+          <Text style={styles.label}>Email:</Text>
+          <Text style={styles.value}>1134872@atitus.edu.com.br</Text>
+        </View>
+      </View>
+      <View style={[styles.card, { marginTop: 20 }]}>
+        <View style={styles.infoContainer}>
+          <MaterialIcons name="school" size={24} color="#6c757d" />
+          <Text style={styles.label}>RA:</Text>
+          <Text style={styles.value}>1134953</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <MaterialIcons name="person" size={24} color="#6c757d" />
+          <Text style={styles.label}>Nome Completo:</Text>
+          <Text style={styles.value}>Ricardo Basso Gunther</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <MaterialIcons name="email" size={24} color="#6c757d" />
+          <Text style={styles.label}>Email:</Text>
+          <Text style={styles.value}>1134953@atitus.edu.com.br</Text>
+        </View>
+      </View>
     </View>
   );
 }
@@ -30,7 +65,6 @@ export default function SobreScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     padding: 20,
     backgroundColor: "#f8f9fa",
@@ -38,7 +72,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 30,
+    color: "#343a40",
+    textAlign: "center",
+  },
+  title2: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 10,
     color: "#343a40",
     textAlign: "center",
   },

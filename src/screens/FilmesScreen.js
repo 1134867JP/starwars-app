@@ -1,27 +1,57 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import axios from "axios";
 
 export default function FilmesScreen({ route }) {
   const { personagem } = route.params;
   const [filmes, setFilmes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     async function fetchFilmes() {
-      const responses = await Promise.all(
-        personagem.films.map((url) => axios.get(url))
-      );
-      setFilmes(responses.map((response) => response.data));
+      try {
+        const responses = await Promise.all(
+          personagem.films.map((url) => axios.get(url, { signal }))
+        );
+        setFilmes(responses.map((response) => response.data));
+      } catch (error) {
+        if (!axios.isCancel(error)) {
+          console.error("Erro ao buscar os filmes:", error);
+          setError(true);
+        }
+      } finally {
+        setLoading(false);
+      }
     }
 
     if (personagem.films.length > 0) {
       fetchFilmes();
+    } else {
+      setLoading(false);
     }
+
+    return () => {
+      controller.abort(); // Cancela a solicitação se o componente for desmontado
+    };
   }, [personagem]);
 
   return (
     <View style={styles.container}>
-      {filmes.length > 0 ? (
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : error ? (
+        <Text style={styles.noFilmesText}>Erro ao carregar filmes.</Text>
+      ) : filmes.length > 0 ? (
         <FlatList
           data={filmes}
           keyExtractor={(item) => item.title}
@@ -33,8 +63,8 @@ export default function FilmesScreen({ route }) {
                   Diretor: <Text style={styles.value}>{item.director}</Text>
                 </Text>
                 <Text style={styles.label}>
-                  Data de Lançamento:{" "}
-                  <Text style={styles.value}>{item.release_date}</Text>
+                  Data de Lançamento: <Text style={styles.value}></Text>
+                  {new Date(item.release_date).toLocaleDateString("pt-BR")}
                 </Text>
               </View>
             </View>
